@@ -1,0 +1,32 @@
+h1 {
+    text-align: center;
+}
+
+h3 {
+    text-align: right;
+}
+
+h4 {
+    text-align: center;
+}
+
+.container {
+    margin-bottom: 25px;
+}
+
+input[type=number] {
+    border: 0px;
+}
+
+select {
+    border: 0px;
+}
+
+.circulo {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: green;
+    margin: 4px;
+    float: left;
+}

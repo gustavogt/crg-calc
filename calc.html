@@ -1,0 +1,144 @@
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    
+        <link href="./calc.css" rel="stylesheet">
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="./calc.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                Calc.construirEnquadramentos();
+            });
+        </script>
+    </head>
+
+    <body>
+        <form>
+            <h1>Calculadora de Penalidade Administrativa</h1>
+            <div id="areaEnquadramento" class="container" style="height: 300px; overflow-y: scroll;">
+                <table id="tableEnquadramento" class="table">
+                    <thead>
+                        <tr>
+                          <th></th>
+                          <th>Enquadramento</th>
+                          <th>Reincidência</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="areaParametros" class="container" style="display: none;">
+              <h4>Parâmetros de Dosimetria</h4>  
+              <table id="tableDosimetria" class="table">
+                  <thead>
+                      <tr>
+                        <th>Critério</th>
+                        <th style="width: 150px;">Qualificador</th>
+                        <th style="width: 70%;"></th>
+                        <th>Pontos</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                        <td>Natureza</td>
+                        <td>
+                          <div  id="naturezaCirculo" class="circulo"></div>
+                          <span id="naturezaQualificador">Culpa Leve</span>                          
+                        </td>
+                        <td>
+                          <input type="range" class="custom-range" name="natureza" oninput="Calc.onInputRange('natureza', this.value)"
+                                 value="1" min="1" max="21" style="width: 100%;" />
+                        </td>
+                        <td>
+                          <input type="number" id="naturezaPontos" value="1" min="1" max="21" onchange="Calc.onChangeTotal('natureza', this)" tabindex="1"/>
+                        </td>
+                    </tr>
+                    <tr>
+                      <td>Gravidade</td>
+                      <td>
+                        <div  id="gravidadeCirculo" class="circulo"></div>
+                        <span id="gravidadeQualificador">Baixa</span>
+                      </td>
+                      <td>
+                        <input type="range" class="custom-range" name="gravidade" oninput="Calc.onInputRange('gravidade', this.value)"
+                               value="1" min="1" max="21" style="width: 100%;" />
+                      </td>
+                      <td>
+                        <input type="number" id="gravidadePontos" value="1" min="1" max="21" onchange="Calc.onChangeTotal('gravidade', this)" tabindex="2"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Dano</td>
+                      <td>
+                        <div  id="danoCirculo" class="circulo"></div>
+                        <span id="danoQualificador">Leve</span>
+                      </td>
+                      <td>
+                        <input type="range" class="custom-range" name="dano" oninput="Calc.onInputRange('dano', this.value)"
+                               value="0" min="0" max="21" style="width: 100%;" />
+                      </td>
+                      <td>
+                        <input type="number" id="danoPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('dano', this)" tabindex="3"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">Atenuantes</td>
+                      <td>
+                        <input type="range" class="custom-range" name="atenuantes"oninput="Calc.onInputRange('atenuantes', this.value)"
+                               value="0" min="0" max="21" style="width: 100%;" />
+                      </td>
+                      <td>
+                        <input type="number" id="atenuantesPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('atenuantes', this)" tabindex="4" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">Agravantes</td>
+                      <td>
+                        <input type="range" class="custom-range" name="agravantes" oninput="Calc.onInputRange('agravantes', this.value)"
+                               value="0" min="0" max="21" style="width: 100%;" />
+                    </div>
+                      </td>
+                      <td>
+                        <input type="number" id="agravantesPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('agravantes', this)" tabindex="5"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">Bons Antecedentes</td>
+                      <td>
+                        <input type="range" class="custom-range" name="bonsAntecedentes" oninput="Calc.onInputRange('bonsAntecedentes', this.value)"
+                               value="0" min="0" max="21" style="width: 100%;" />
+                      </td>
+                      <td>
+                        <input type="number" id="bonsAntecedentesPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('bonsAntecedentes', this)" tabindex="6" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">Maus Antecedentes</td>
+                      <td>
+                        <input type="range" class="custom-range" name="mausAntecedentes" oninput="Calc.onInputRange('mausAntecedentes', this.value)"
+                               value="0" min="0" max="21" style="width: 100%;" />
+                      </td>
+                      <td>
+                        <input type="number" id="mausAntecedentesPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('mausAntecedentes', this)" tabindex="7" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="text-align: right;">
+                          <b>Total: </b>
+                      </td>
+                      <td>
+                        <span id="totalGeral">3</span>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>           
+            </div>  
+            <div id="areaResultado" class="container">
+                <h3>Selecione os enquadramentos para início dos cálculos</h3>
+            </div>
+        </form>
+    </body>
+</html>
