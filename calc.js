@@ -58,19 +58,10 @@ const Calc = {
         {descricao: "Lei 12.527, Art. 32, V - impor sigilo à informação para obter proveito pessoal ou de terceiro, ou para fins de ocultação de ato ilegal cometido por si ou por outrem;", pena: "Suspensão1"},
         {descricao: "Lei 12.527, Art. 32, VI - ocultar da revisão de autoridade superior competente informação sigilosa para beneficiar a si ou a outrem, ou em prejuízo de terceiros;", pena: "Suspensão1"},
         {descricao: "Lei 12.527, Art. 32, VII - destruir ou subtrair, por qualquer meio, documentos concernentes a possíveis violações de direitos humanos por parte de agentes do Estado.", pena: "Suspensão1"}
-    ],
-    
+    ],  
 
     construirCheckboxSelecaoEnquadramento: function (value) {
         return `<input type="checkbox" class="form-check-input" value="${value}" onchange="Calc.atualizarCalculos()"></input>`;
-    },
-
-    construirCheckboxSelecaoReincidencia: function (pena) {
-        if (pena == "Advertência") {
-            return `<input type="checkbox" class="form-check-input" onchange="Calc.atualizarCalculos()"></input>`;
-        } else {
-            return ``;
-        }
     },
 
     construirEnquadramentos: function () {
@@ -79,7 +70,6 @@ const Calc = {
             tableBody.append($(`<tr>
                     <td>${Calc.construirCheckboxSelecaoEnquadramento(i)}</td>
                     <td>${e.descricao}</td>
-                    <td>${Calc.construirCheckboxSelecaoReincidencia(e.pena)}</input></td>
                 </tr>`));
         });
     },
@@ -101,14 +91,16 @@ const Calc = {
         let existeSuspensao2 = false;
         let existeReincidencia = false;
         let existeAdvertencia = false;
+
+        let reincidencia = $('#reincidencia').prop('checked');
           
         inputs.each((index, input) => {
             let enquadramento = Calc.enquadramentos[$(input).val()];
             existeDemissao = existeDemissao || enquadramento.pena == "Demissão";
             existeSuspensao1 = existeSuspensao1 || enquadramento.pena == "Suspensão1";
             existeSuspensao2 = existeSuspensao2 || enquadramento.pena == "Suspensão2";
-            existeReincidencia = existeReincidencia || (enquadramento.pena == "Advertência" && $(input).parent().parent().find('td:nth-child(3) input').prop('checked'));
-            existeAdvertencia = existeAdvertencia || (enquadramento.pena == "Advertência" && !$(input).parent().parent().find('td:nth-child(3) input').prop('checked'));
+            existeReincidencia = existeReincidencia || (enquadramento.pena == "Advertência" && reincidencia);
+            existeAdvertencia = existeAdvertencia || (enquadramento.pena == "Advertência" && !reincidencia);
          });
 
         let config = {demissao: existeDemissao, suspensao1: existeSuspensao1, suspensao2: existeSuspensao2, reincidencia: existeReincidencia, advertencia: existeAdvertencia};
@@ -129,7 +121,7 @@ const Calc = {
         if (!config.demissao) {
             $('#areaResultado').html(Calc.calcularAdvertenciaOuSuspensao(config));
         } else {
-            $('#areaResultado').html("<h3>Demissão, Cassação de Aposentadoria ou Disponibilidade</h3>");
+            $('#areaResultado').html("<h3>Demissão, Destituição, Cassação de Aposentadoria ou Disponibilidade</h3>");
         }      
     },
 
@@ -199,20 +191,22 @@ const Calc = {
 
     atualizarQualificador: function(prefixo, valor) {
         if (prefixo == "natureza" || prefixo == "gravidade" || prefixo == "dano") {
-            if (1 <= valor && valor <= 7) {
-                $(`#${prefixo}Circulo`).css("background-color", "green");
-                $(`#${prefixo}Qualificador`).html(Calc.qualificadores[prefixo][0]);
+            if (15 <= valor && valor <= 21) {                
+                $(`#${prefixo}Circulo`).css("background-color", "red"); 
+                $(`#${prefixo}Qualificador`).html(Calc.qualificadores[prefixo][2]);
             } else if (8 <= valor && valor <= 14) {
                 $(`#${prefixo}Circulo`).css("background-color", "goldenrod");
                 $(`#${prefixo}Qualificador`).html(Calc.qualificadores[prefixo][1]);
             } else {
-                $(`#${prefixo}Circulo`).css("background-color", "red"); 
-                $(`#${prefixo}Qualificador`).html(Calc.qualificadores[prefixo][2]);
+                $(`#${prefixo}Circulo`).css("background-color", "green");
+                $(`#${prefixo}Qualificador`).html(Calc.qualificadores[prefixo][0]);
             }
         }
     },
 
     onChangeTotal: function (name, input) {
+        input.value = Math.floor(input.value);
+
         if (parseInt(input.value) < parseInt(input.min)) {
             input.value = input.min;
         } else if (parseInt(input.value) > parseInt(input.max)) {
