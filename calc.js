@@ -150,7 +150,7 @@ const Calc = {
         dias = (dias > 1) ? dias : 1;
         dias = Math.floor(dias);
 
-        return `<h3 title="Pontuação: ${pontos}">Suspensão de ${dias} dia(s)</h3>`;
+        return `<h3 title="Pontuação: ${pontos}">Suspensão de ${dias} dia(s) ou Destituição de Função Comissionada</h3>`;
     },
 
     calcularCasoGeral: function (config, pontos) {
@@ -170,7 +170,7 @@ const Calc = {
         
         if (pontos <= 15) {
             if (config.suspensao2) {
-                return `<h3 title="Pontuação: ${pontos}">Suspensão de ${pontos - 15} dia(s)</h3>`;   
+                return `<h3 title="Pontuação: ${pontos}">Suspensão de ${pontos - 15} dia(s) ou Destituição de Função Comissionada</h3>`;   
             }
             if (config.reincidencia) {
                 return `<h3 title="Pontuação: ${pontos}. Penalidade convertida de Advertência para Suspensão devido a reincidência.">Suspensão de 1 dia ou Destituição de Função Comissionada</h3>`;
