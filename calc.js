@@ -233,13 +233,13 @@ const Calc = {
     atualizarQualificador: function(prefixo, valor) {
         if (prefixo == "natureza" || prefixo == "gravidade" || prefixo == "dano") {
             if (15 <= valor && valor <= 21) {                
-                $(`#${prefixo}Circulo`).css("background-color", "red"); 
+                $(`#${prefixo}Circulo`).removeClass("circulo-qualificador-leve circulo-qualificador-medio circulo-qualificador-grave").addClass("circulo-qualificador-grave");
                 $(`#${prefixo}Qualificador`).html(Calc.qualificadores[prefixo][2]);
             } else if (8 <= valor && valor <= 14) {
-                $(`#${prefixo}Circulo`).css("background-color", "goldenrod");
+                $(`#${prefixo}Circulo`).removeClass("circulo-qualificador-leve circulo-qualificador-medio circulo-qualificador-grave").addClass("circulo-qualificador-medio");
                 $(`#${prefixo}Qualificador`).html(Calc.qualificadores[prefixo][1]);
             } else {
-                $(`#${prefixo}Circulo`).css("background-color", "#0d6efd");
+                $(`#${prefixo}Circulo`).removeClass("circulo-qualificador-leve circulo-qualificador-medio circulo-qualificador-grave").addClass("circulo-qualificador-leve");
                 $(`#${prefixo}Qualificador`).html(Calc.qualificadores[prefixo][0]);
             }
         }
