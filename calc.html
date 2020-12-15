@@ -30,10 +30,10 @@
 
             <div id="areaParametros" class="container" style="display: none;">
               <h4>Parâmetros de Dosimetria (aumentam o grau da infração)</h4>  
-              <table id="tableDosimetria1" class="table">
+              <table id="tableCriteriosQueAumentam" class="table">
                   <thead>
                       <tr>
-                        <th>Critério</th>
+                        <th><i class="fas fa-trash-alt" title="Reinicializa os parâmetros de dosimetria que aumentam o grau da infração" onclick="Calc.resetarCriteriosQueAumentamGrau()"></i>  Critério</th>
                         <th style="width: 150px;">Qualificador</th>
                         <th style="width: 70%;"></th>
                         <th>Pontos</th>
@@ -117,10 +117,10 @@
               </table> 
 
               <h4>Parâmetros de Dosimetria (diminuem o grau da infração)</h4>  
-              <table id="tableDosimetria2" class="table">
+              <table id="tableCriteriosQueDiminuem" class="table">
                   <thead>
                       <tr>
-                        <th>Critério</th>
+                        <th><i class="fas fa-trash-alt" title="Reinicializa os parâmetros de dosimetria que diminuem o grau da infração" onclick="Calc.resetarCriteriosQueDiminuem()"></i>  Critério</th>
                         <th style="width: 150px;">Qualificador</th>
                         <th style="width: 70%;"></th>
                         <th>Pontos</th>

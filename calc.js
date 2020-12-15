@@ -83,6 +83,28 @@ const Calc = {
         Calc.onClickEnquadramento();
     },
 
+    resetarCriteriosQueAumentamGrau: function() {
+        $("#tableCriteriosQueAumentam tbody input").val(0);
+
+        $("#naturezaPontos").val(1);
+        $("#gravidadePontos").val(1);
+
+        $("input[name='natureza']").val(1);
+        $("input[name='gravidade']").val(1);
+
+        Calc.atualizarQualificador("natureza", 1);
+        Calc.atualizarQualificador("gravidade", 1);
+        Calc.atualizarQualificador("dano", 0);
+
+        Calc.atualizarCalculos();
+    },
+
+    resetarCriteriosQueDiminuem: function() {
+        $("#tableCriteriosQueDiminuem tbody input").val(0);
+
+        Calc.atualizarCalculos();
+    },
+
     construirEnquadramentos: function () {
         let tableBody = $('#tableEnquadramento tbody');
         Calc.enquadramentos.forEach((e, i) => {
