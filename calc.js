@@ -1,5 +1,8 @@
 /* exported Calc */
 const Calc = {
+    tipo: null,
+    tipos: ["tac", "pad"],
+    
     qualificadores: {
         natureza: ['Culpa Leve', 'Culpa Grave', 'Dolo'],
         gravidade: ['Baixa', 'Média', 'Alta'],
@@ -60,7 +63,48 @@ const Calc = {
         {descricao: "Lei 12.527, Art. 32, VII - destruir ou subtrair, por qualquer meio, documentos concernentes a possíveis violações de direitos humanos por parte de agentes do Estado.", pena: "Suspensão1"}
     ],  
 
-    construirCheckboxSelecaoEnquadramento: function (value) {
+    getUrlParameter: function(nome) {
+        let pageURL = window.location.search.substring(1),
+            parametros = pageURL.split('&'),
+            nomeParametro,
+            i;
+    
+        for (i = 0; i < parametros.length; i++) {
+            nomeParametro = parametros[i].split('=');
+    
+            if (nomeParametro[0] === nome) {
+                return nomeParametro[1] === undefined ? true : decodeURIComponent(nomeParametro[1]);
+            }
+        }
+    }, 
+
+    init: function() {
+        let tipo = Calc.getUrlParameter("tipo");
+
+        if (Calc.tipos.includes(tipo)) {
+            if (tipo == "tac") {
+                Calc.gerarElementosTAC(); 
+            } else if (tipo == "pad") {
+                Calc.gerarElementosPAD();            }
+            Calc.construirEnquadramentos();
+        } else {
+            Calc.informarProblemaTipoCalculadora();
+        }
+    },
+
+    informarProblemaTipoCalculadora: function() {
+        $('body').html('<h1>Problema com a escolha do tipo da calculadora.</h1>');
+    },
+
+    gerarElementosTAC: function() {
+        $('h1').html(`Calculadora de Viabilidade de TAC <i class="fas fa-info-circle" title="Aperte as teclas 'Ctrl + F' para abrir a busca do navegador."></i>`);
+    },
+
+    gerarElementosPAD: function() {
+        $('h1').html(`Calculadora de Penalidade Administrativa <i class="fas fa-info-circle" title="Aperte as teclas 'Ctrl + F' para abrir a busca do navegador."></i>`);
+    },
+
+    construirCheckboxSelecaoEnquadramento: function(value) {
         return `<input type="checkbox" class="form-check-input" value="${value}" onchange="Calc.onClickEnquadramento()"></input>`;
     },
 
@@ -186,12 +230,40 @@ const Calc = {
         }      
     },
 
+    tacPodeSerCelebrado: function(diasSuspensao) {
+        return diasSuspensao > 30;
+    },
+
+    calcularMensagemTAC: function(diasSuspensao) {
+        let retorno = "";
+
+        if (Calc.tacPodeSerCelebrado(diasSuspensao)) {
+            retorno = `<h3>Celebração de TAC impossível</h3>`;
+        } else {
+            retorno = `<h3>Celebração de TAC possível</h3>`;
+            retorno += `<p style="text-align: right;">A celebração de TAC deve observar as condições estabelecidas na IN CGU/CRG 04 de 2020. 
+                        Clique <a href='https://www.in.gov.br/web/dou/-/instrucao-normativa-n-4-de-21-de-fevereiro-de-2020-244805929' target='blank'>aqui</a> para acessar.<p>`;
+        }
+
+        return retorno;
+    },
+
     calcularCasoSuspensao1: function (pontos) {
         let dias = 6 * pontos / 7;
         dias = (dias > 1) ? dias : 1;
         dias = Math.floor(dias);
 
-        return `<h3 title="Pontuação: ${pontos}">Suspensão de ${dias} dia(s) ou Destituição de Função Comissionada</h3>`;
+        let tipo = Calc.getUrlParameter("tipo");
+        let retorno = "";
+
+        if (tipo == "pad") {
+            retorno = `<h3 title="Pontuação: ${pontos}">Suspensão de ${dias} dia(s) ou Destituição de Cargo em Comissão</h3>`;
+        } else if (tipo == "tac") {
+            retorno = `<h3 title="Pontuação: ${pontos}">Suspensão de ${dias} dia(s)</h3>`;
+            retorno += Calc.calcularMensagemTAC(dias);
+        }
+
+        return retorno;
     },
 
     calcularCasoGeral: function (config, pontos) {
@@ -200,28 +272,75 @@ const Calc = {
         diasSuspensao2 = Math.floor(diasSuspensao2);
         
         let diasCasoGeral = pontos - 15;
+        
+        let tipo = Calc.getUrlParameter("tipo");
+        
+        if (tipo == "pad") {
+            return Calc.calcularCasosGeralPAD(config, pontos, diasSuspensao2, diasCasoGeral);
+        } else if (tipo == "tac") {
+            return Calc.calcularCasosGeralTAC(config, pontos, diasSuspensao2, diasCasoGeral);
+        }
+    },
+
+    calcularCasosGeralPAD: function(config, pontos, diasSuspensao2, diasCasoGeral) {
+        let retorno = "";
 
         if (config.suspensao2) {
             if (config.advertencia || config.reincidencia) {
-                return `<h3 title="Pontuação: ${pontos}">Suspensão de ${diasSuspensao2 > diasCasoGeral ? diasSuspensao2 : diasCasoGeral} dia(s) ou Destituição de Função Comissionada</h3>`;
+                retorno = `<h3 title="Pontuação: ${pontos}">Suspensão de ${diasSuspensao2 > diasCasoGeral ? diasSuspensao2 : diasCasoGeral} dia(s) ou Destituição de Cargo em Comissão</h3>`;
             } else {
-                return `<h3 title="Pontuação: ${pontos}">Suspensão de ${diasSuspensao2} dia(s) ou Destituição de Função Comissionada</h3>`;
+                retorno = `<h3 title="Pontuação: ${pontos}">Suspensão de ${diasSuspensao2} dia(s) ou Destituição de Cargo em Comissão</h3>`;
             }
         }
         
         if (pontos <= 15) {
             if (config.suspensao2) {
-                return `<h3 title="Pontuação: ${pontos}">Suspensão de ${pontos - 15} dia(s) ou Destituição de Função Comissionada</h3>`;   
+                retorno = `<h3 title="Pontuação: ${pontos}">Suspensão de ${pontos - 15} dia(s) ou Destituição de Cargo em Comissão</h3>`;   
             }
             if (config.reincidencia) {
-                return `<h3 title="Pontuação: ${pontos}. Penalidade convertida de Advertência para Suspensão devido a reincidência.">Suspensão de 1 dia ou Destituição de Função Comissionada</h3>`;
+                retorno = `<h3 title="Pontuação: ${pontos}. Penalidade convertida de Advertência para Suspensão devido a reincidência.">Suspensão de 1 dia ou Destituição de Cargo em Comissão</h3>`;
             } else {
-                return `<h3 title="Pontuação: ${pontos}">Advertência</h3>`;
+                retorno = `<h3 title="Pontuação: ${pontos}">Advertência</h3>`;
             }
         } else {
-            return `<h3 title="Pontuação: ${pontos}">Suspensão de ${pontos - 15} dia(s) ou Destituição de Função Comissionada</h3>`;
+            retorno = `<h3 title="Pontuação: ${pontos}">Suspensão de ${pontos - 15} dia(s) ou Destituição de Cargo em Comissão</h3>`;
         }
-    },
+        
+        return retorno;
+    }, 
+
+    calcularCasosGeralTAC: function(config, pontos, diasSuspensao2, diasCasoGeral) {
+        let retorno = "";
+
+        if (config.suspensao2) {
+            if (config.advertencia || config.reincidencia) {
+                retorno = `<h3 title="Pontuação: ${pontos}">Suspensão de ${diasSuspensao2 > diasCasoGeral ? diasSuspensao2 : diasCasoGeral} dia(s)</h3>`;
+                retorno += Calc.calcularMensagemTAC(diasSuspensao2 > diasCasoGeral ? diasSuspensao2 : diasCasoGeral);
+            } else {
+                retorno = `<h3 title="Pontuação: ${pontos}">Suspensão de ${diasSuspensao2} dia(s)</h3>`;
+                retorno += Calc.calcularMensagemTAC(diasSuspensao2);
+            }
+        }
+        
+        if (pontos <= 15) {
+            if (config.suspensao2) {
+                retorno = `<h3 title="Pontuação: ${pontos}">Suspensão de ${pontos - 15} dia(s)</h3>`;   
+                retorno += Calc.calcularMensagemTAC(pontos - 15);
+            }
+            if (config.reincidencia) {
+                retorno = `<h3 title="Pontuação: ${pontos}. Penalidade convertida de Advertência para Suspensão devido a reincidência.">Suspensão de 1 dia</h3>`;
+                retorno += Calc.calcularMensagemTAC(1);
+            } else {
+                retorno = `<h3 title="Pontuação: ${pontos}">Advertência</h3>`;
+                retorno += Calc.calcularMensagemTAC(0);
+            }
+        } else {
+            retorno = `<h3 title="Pontuação: ${pontos}">Suspensão de ${pontos - 15} dia(s)</h3>`;
+            retorno += Calc.calcularMensagemTAC(pontos - 15);
+        }
+        
+        return retorno;
+    }, 
 
     onInputRange: function (prefixo, valor) {
         $(`#${prefixo}Pontos`).val(valor);
