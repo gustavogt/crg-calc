@@ -61,7 +61,26 @@ const Calc = {
     ],  
 
     construirCheckboxSelecaoEnquadramento: function (value) {
-        return `<input type="checkbox" class="form-check-input" value="${value}" onchange="Calc.atualizarCalculos()"></input>`;
+        return `<input type="checkbox" class="form-check-input" value="${value}" onchange="Calc.onClickEnquadramento()"></input>`;
+    },
+
+    onClickEnquadramento: function() {
+        let infoEnquadramentos = $("#infoEnquadramentos");
+        let inputsChecked = $('#tableEnquadramento tbody input:checked');
+
+        if (inputsChecked.length == 1) {
+            infoEnquadramentos.html("Enquadramentos (1 selecionado)");
+        } else {
+            infoEnquadramentos.html(`Enquadramentos (${inputsChecked.length} selecionados)`);
+        }
+
+        Calc.atualizarCalculos();
+    },
+
+    apagarSelecaoEnquadramentos: function() {
+        $("#tableEnquadramento tbody input").prop("checked", false);
+
+        Calc.onClickEnquadramento();
     },
 
     construirEnquadramentos: function () {
@@ -198,7 +217,7 @@ const Calc = {
                 $(`#${prefixo}Circulo`).css("background-color", "goldenrod");
                 $(`#${prefixo}Qualificador`).html(Calc.qualificadores[prefixo][1]);
             } else {
-                $(`#${prefixo}Circulo`).css("background-color", "green");
+                $(`#${prefixo}Circulo`).css("background-color", "#0d6efd");
                 $(`#${prefixo}Qualificador`).html(Calc.qualificadores[prefixo][0]);
             }
         }

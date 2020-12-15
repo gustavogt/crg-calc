@@ -1,21 +1,20 @@
 h1 {
+    font-size: 2rem;
     text-align: center;
 }
 
 h3 {
+    font-size: 1.5rem;
     text-align: right;
 }
 
 h4 {
+    font-size: 1.2rem;
     text-align: center;
 }
 
 .container {
     margin-bottom: 25px;
-}
-
-input[type=number] {
-    border: 0px;
 }
 
 select {
@@ -26,7 +25,19 @@ select {
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background-color: green;
+    background-color: #0d6efd;
     margin: 4px;
     float: left;
 }
+
+.table-wrapper {
+    height: 250px; 
+    overflow-y: scroll;
+}
+
+.table-wrapper th{
+    position: sticky;
+    background: white;
+    top: 0;
+}
+
