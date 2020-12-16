@@ -61,4 +61,12 @@ h4 {
 
 .table>:not(caption)>*>* {
     padding: .2rem .2rem;
+}
 
+.pointer {
+    cursor: pointer;
+}
+
+.help {
+    cursor: help;
+}

@@ -1,178 +1,255 @@
-<html>
-    <head>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-      <link href="./calc.css" rel="stylesheet">
-      <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-      <script src="https://kit.fontawesome.com/bd92989e4d.js" crossorigin="anonymous"></script>      
-      <script src="./calc.js"></script>       
-      <script type="text/javascript">
-        $(function() {
-            Calc.init();
-        });
-      </script>
-    </head>
+<!doctype html>
+<html lang="pt-br">
 
-    <body>
-        <form>
-            <h1></h1>
-            <div id="areaEnquadramento" class="container table-wrapper">
-                <table id="tableEnquadramento" class="table">
-                    <thead>
-                        <tr>
-                          <th><i class="fas fa-trash-alt" title="Apaga a seleção de enquadramento" onclick="Calc.apagarSelecaoEnquadramentos()"></i></th>
-                          <th id="infoEnquadramentos">Enquadramentos (0 selecionados)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-            <div id="areaParametros" class="container" style="display: none;">
-              <h4>Parâmetros de Dosimetria (aumentam o grau da infração)</h4>  
-              <table id="tableCriteriosQueAumentam" class="table">
-                  <thead>
-                      <tr>
-                        <th><i class="fas fa-trash-alt" title="Reinicializa os parâmetros de dosimetria que aumentam o grau da infração" onclick="Calc.resetarCriteriosQueAumentamGrau()"></i>  Critério</th>
-                        <th style="width: 150px;">Qualificador</th>
-                        <th style="width: 70%;"></th>
-                        <th>Pontos</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                        <td title="A natureza refere-se ao elemento subjetivo da conduta, à intenção do agente, podendo ser culpa leve, culpa grave ou dolo.">
-                          Natureza
-                        </td>
-                        <td>
-                          <div  id="naturezaCirculo" class="circulo-qualificador-leve"></div>
-                          <span id="naturezaQualificador">Culpa Leve</span>                          
-                        </td>
-                        <td>
-                          <input type="range" class="custom-range" name="natureza" oninput="Calc.onInputRange('natureza', this.value)"
-                                 value="1" min="1" max="21" style="width: 100%;" />
-                        </td>
-                        <td>
-                          <input type="number" id="naturezaPontos" value="1" min="1" max="21" onchange="Calc.onChangeTotal('natureza', this)" tabindex="1" title="Informe um valor inteiro" />
-                        </td>
-                    </tr>
-                    <tr>
-                      <td title="A gravidade é avaliada conforme o 'grau' da ofensa à norma, da violação ao ordenamento, do enquadramento.">
-                        Gravidade
-                      </td>
-                      <td>
-                        <div  id="gravidadeCirculo" class="circulo-qualificador-leve"></div>
-                        <span id="gravidadeQualificador">Baixa</span>
-                      </td>
-                      <td>
-                        <input type="range" class="custom-range" name="gravidade" oninput="Calc.onInputRange('gravidade', this.value)"
-                               value="1" min="1" max="21" style="width: 100%;" />
-                      </td>
-                      <td>
-                        <input type="number" id="gravidadePontos" value="1" min="1" max="21" onchange="Calc.onChangeTotal('gravidade', this)" tabindex="2" title="Informe um valor inteiro" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td title="Dano é avaliado conforme o 'grau' da lesão a um bem juridicamente protegido, causando prejuízo material ou imaterial.">
-                        Dano
-                      </td>
-                      <td>
-                        <div  id="danoCirculo" class="circulo-qualificador-leve"></div>
-                        <span id="danoQualificador">Leve</span>
-                      </td>
-                      <td>
-                        <input type="range" class="custom-range" name="dano" oninput="Calc.onInputRange('dano', this.value)"
-                               value="0" min="0" max="21" style="width: 100%;" />
-                      </td>
-                      <td>
-                        <input type="number" id="danoPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('dano', this)" tabindex="3" title="Informe um valor inteiro" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" title="As circunstâncias agravantes correspondem a situações relacionadas à infração cometida pelo agente e que têm o condão de elevar o 'grau' de sua conduta.">
-                        Agravantes
-                      </td>
-                      <td>
-                        <input type="range" class="custom-range" name="agravantes" oninput="Calc.onInputRange('agravantes', this.value)"
-                               value="0" min="0" max="21" style="width: 100%;" />
-                    </div>
-                      </td>
-                      <td>
-                        <input type="number" id="agravantesPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('agravantes', this)" tabindex="5" title="Informe um valor inteiro"/>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" title="Os maus antecedentes são os registros desabonadores quanto à conduta funcional do infrator, tais como: descumprimento de Termo de Ajustamento de Conduta - TAC, faltas não justificadas, atrasos e outros registros indicadores de descompromisso com o trabalho. Se não houver tais registros na pasta funcional, o valor será ZERO.">
-                        Maus Antecedentes
-                      </td>
-                      <td>
-                        <input type="range" class="custom-range" name="mausAntecedentes" oninput="Calc.onInputRange('mausAntecedentes', this.value)"
-                               value="0" min="0" max="21" style="width: 100%;" />
-                      </td>
-                      <td>
-                        <input type="number" id="mausAntecedentesPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('mausAntecedentes', this)" tabindex="7" title="Informe um valor inteiro" />
-                      </td>
-                    </tr>
-                  </tbody>
-              </table> 
+  <!-- Bootstrap CSS -->
+  <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link href="./calc.css" rel="stylesheet">
 
-              <h4>Parâmetros de Dosimetria (diminuem o grau da infração)</h4>  
-              <table id="tableCriteriosQueDiminuem" class="table">
-                  <thead>
-                      <tr>
-                        <th><i class="fas fa-trash-alt" title="Reinicializa os parâmetros de dosimetria que diminuem o grau da infração" onclick="Calc.resetarCriteriosQueDiminuem()"></i>  Critério</th>
-                        <th style="width: 150px;">Qualificador</th>
-                        <th style="width: 70%;"></th>
-                        <th>Pontos</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td colspan="2" title="As circunstâncias atenuantes correspondem a situações relacionadas à infração cometida pelo agente e que têm o condão de diminuir o 'grau' de sua conduta.">
-                        Atenuantes
-                      </td>
-                      <td>
-                        <input type="range" class="custom-range" name="atenuantes"oninput="Calc.onInputRange('atenuantes', this.value)"
-                               value="0" min="0" max="21" style="width: 100%;" />
-                      </td>
-                      <td>
-                        <input type="number" id="atenuantesPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('atenuantes', this)" tabindex="4" title="Informe um valor inteiro" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" title="Os bons antecedentes informam o reconhecimento dos serviços prestados à Administração, na forma de agradecimentos, elogios, entre outros registros que demonstrem a dedicação ao trabalho. Se não houver tais registros na pasta funcional, o valor será ZERO.">
-                        Bons Antecedentes
-                      </td>
-                      <td>
-                        <input type="range" class="custom-range" name="bonsAntecedentes" oninput="Calc.onInputRange('bonsAntecedentes', this.value)"
-                               value="0" min="0" max="21" style="width: 100%;" />
-                      </td>
-                      <td>
-                        <input type="number" id="bonsAntecedentesPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('bonsAntecedentes', this)" tabindex="6" title="Informe um valor inteiro" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="3" style="text-align: right;">
-                          <b>Grau: </b>
-                      </td>
-                      <td>
-                        <span id="totalGeral">3</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="3" style="text-align: right;">
-                          Reincidência?
-                      </td>
-                      <td>
-                        <input type="checkbox" id="reincidencia" class="form-check-input" onchange="Calc.atualizarCalculos()"></input>
-                      </td>
-                    </tr>
-                  </tbody>
-              </table> 
-            </div>  
-            <div id="areaResultado" class="container">
-                <h3>Selecione os enquadramentos para início dos cálculos</h3>
-            </div>
-        </form>
-    </body>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://kit.fontawesome.com/bd92989e4d.js" crossorigin="anonymous"></script>
+
+  <script src="./calc.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      Calc.init();
+    });
+  </script>
+
+  <title>Calculadora</title>
+</head>
+
+<body>
+  <h1><span id="titulo"></span> <i class="fas fa-info-circle pointer" data-bs-toggle="modal" data-bs-target="#exampleModal"></i></h1>
+  <div id="areaEnquadramento" class="container table-wrapper">
+    <table id="tableEnquadramento" class="table">
+      <thead>
+        <tr>
+          <th><i class="fas fa-trash-alt pointer" title="Apaga a seleção de enquadramento" data-bs-toggle="tooltip"
+              data-bs-placement="top" onclick="Calc.apagarSelecaoEnquadramentos()"></i></th>
+          <th><span id="infoEnquadramentos">Enquadramentos (0 selecionados)</span> <i
+              class="fas fa-question-circle help" title="Aperte as teclas 'Ctrl + F' para abrir a busca do navegador."
+              data-bs-toggle="tooltip" data-bs-placement="right"></i></th>
+        </tr>
+      </thead>
+      <tbody style="text-align:justify;">
+      </tbody>
+    </table>
+  </div>
+
+  <div id="areaParametros" class="container" style="display: none;">
+    <h4>Parâmetros de Dosimetria (aumentam o grau da infração)</h4>
+    <table id="tableCriteriosQueAumentam" class="table">
+      <thead>
+        <tr>
+          <th><i class="fas fa-trash-alt pointer"
+              title="Reinicializa os parâmetros de dosimetria que aumentam o grau da infração" data-bs-toggle="tooltip"
+              data-bs-placement="top" onclick="Calc.resetarCriteriosQueAumentamGrau()"></i> Critério</th>
+          <th style="width: 150px;">Qualificador</th>
+          <th style="width: 70%;"></th>
+          <th>Graus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            title="A natureza refere-se ao elemento subjetivo da conduta, à intenção do agente, podendo ser culpa leve, culpa grave ou dolo."
+            data-bs-toggle="tooltip" data-bs-placement="right">
+            Natureza
+          </td>
+          <td>
+            <div id="naturezaCirculo" class="circulo-qualificador-leve"></div>
+            <span id="naturezaQualificador">Culpa Leve</span>
+          </td>
+          <td>
+            <input type="range" class="custom-range" name="natureza" oninput="Calc.onInputRange('natureza', this.value)"
+              value="1" min="1" max="21" style="width: 100%;" />
+          </td>
+          <td>
+            <input type="number" id="naturezaPontos" value="1" min="1" max="21"
+              onchange="Calc.onChangeTotal('natureza', this)" tabindex="1" title="Informe um valor inteiro"
+              data-bs-toggle="tooltip" data-bs-placement="right" />
+          </td>
+        </tr>
+        <tr>
+          <td
+            title="A gravidade é avaliada conforme o 'grau' da ofensa à norma, da violação ao ordenamento, do enquadramento."
+            data-bs-toggle="tooltip" data-bs-placement="right">
+            Gravidade
+          </td>
+          <td>
+            <div id="gravidadeCirculo" class="circulo-qualificador-leve"></div>
+            <span id="gravidadeQualificador">Baixa</span>
+          </td>
+          <td>
+            <input type="range" class="custom-range" name="gravidade"
+              oninput="Calc.onInputRange('gravidade', this.value)" value="1" min="1" max="21" style="width: 100%;" />
+          </td>
+          <td>
+            <input type="number" id="gravidadePontos" value="1" min="1" max="21"
+              onchange="Calc.onChangeTotal('gravidade', this)" tabindex="2" title="Informe um valor inteiro"
+              data-bs-toggle="tooltip" data-bs-placement="right" />
+          </td>
+        </tr>
+        <tr>
+          <td
+            title="Dano é avaliado conforme o 'grau' da lesão a um bem juridicamente protegido, causando prejuízo material ou imaterial."
+            data-bs-toggle="tooltip" data-bs-placement="right">
+            Dano
+          </td>
+          <td>
+            <div id="danoCirculo" class="circulo-qualificador-leve"></div>
+            <span id="danoQualificador">Leve</span>
+          </td>
+          <td>
+            <input type="range" class="custom-range" name="dano" oninput="Calc.onInputRange('dano', this.value)"
+              value="0" min="0" max="21" style="width: 100%;" />
+          </td>
+          <td>
+            <input type="number" id="danoPontos" value="0" min="0" max="21" onchange="Calc.onChangeTotal('dano', this)"
+              tabindex="3" title="Informe um valor inteiro" data-bs-toggle="tooltip" data-bs-placement="right" />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2"
+            title="As circunstâncias agravantes correspondem a situações relacionadas à infração cometida pelo agente e que têm o condão de elevar o 'grau' de sua conduta."
+            data-bs-toggle="tooltip" data-bs-placement="bottom">
+            Agravantes
+          </td>
+          <td>
+            <input type="range" class="custom-range" name="agravantes"
+              oninput="Calc.onInputRange('agravantes', this.value)" value="0" min="0" max="21" style="width: 100%;" />
+          </td>
+          <td>
+            <input type="number" id="agravantesPontos" value="0" min="0" max="21"
+              onchange="Calc.onChangeTotal('agravantes', this)" tabindex="5" title="Informe um valor inteiro"
+              data-bs-toggle="tooltip" data-bs-placement="right" />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2"
+            title="Os maus antecedentes são os registros desabonadores quanto à conduta funcional do infrator, tais como: descumprimento de Termo de Ajustamento de Conduta - TAC, faltas não justificadas, atrasos e outros registros indicadores de descompromisso com o trabalho. Se não houver tais registros na pasta funcional, o valor será ZERO."
+            data-bs-toggle="tooltip" data-bs-placement="bottom">
+            Maus Antecedentes
+          </td>
+          <td>
+            <input type="range" class="custom-range" name="mausAntecedentes"
+              oninput="Calc.onInputRange('mausAntecedentes', this.value)" value="0" min="0" max="21"
+              style="width: 100%;" />
+          </td>
+          <td>
+            <input type="number" id="mausAntecedentesPontos" value="0" min="0" max="21"
+              onchange="Calc.onChangeTotal('mausAntecedentes', this)" tabindex="7" title="Informe um valor inteiro"
+              data-bs-toggle="tooltip" data-bs-placement="right" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4>Parâmetros de Dosimetria (diminuem o grau da infração)</h4>
+    <table id="tableCriteriosQueDiminuem" class="table">
+      <thead>
+        <tr>
+          <th><i class="fas fa-trash-alt pointer"
+              title="Reinicializa os parâmetros de dosimetria que diminuem o grau da infração" data-bs-toggle="tooltip"
+              data-bs-placement="top" onclick="Calc.resetarCriteriosQueDiminuem()"></i> Critério</th>
+          <th style="width: 150px;">Qualificador</th>
+          <th style="width: 70%;"></th>
+          <th>Graus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="2"
+            title="As circunstâncias atenuantes correspondem a situações relacionadas à infração cometida pelo agente e que têm o condão de diminuir o 'grau' de sua conduta."
+            data-bs-toggle="tooltip" data-bs-placement="bottom">
+            Atenuantes
+          </td>
+          <td>
+            <input type="range" class="custom-range" name="atenuantes"
+              oninput="Calc.onInputRange('atenuantes', this.value)" value="0" min="0" max="21" style="width: 100%;" />
+          </td>
+          <td>
+            <input type="number" id="atenuantesPontos" value="0" min="0" max="21"
+              onchange="Calc.onChangeTotal('atenuantes', this)" tabindex="4" title="Informe um valor inteiro"
+              data-bs-toggle="tooltip" data-bs-placement="right" />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2"
+            title="Os bons antecedentes informam o reconhecimento dos serviços prestados à Administração, na forma de agradecimentos, elogios, entre outros registros que demonstrem a dedicação ao trabalho. Se não houver tais registros na pasta funcional, o valor será ZERO."
+            data-bs-toggle="tooltip" data-bs-placement="bottom">
+            Bons Antecedentes
+          </td>
+          <td>
+            <input type="range" class="custom-range" name="bonsAntecedentes"
+              oninput="Calc.onInputRange('bonsAntecedentes', this.value)" value="0" min="0" max="21"
+              style="width: 100%;" />
+          </td>
+          <td>
+            <input type="number" id="bonsAntecedentesPontos" value="0" min="0" max="21"
+              onchange="Calc.onChangeTotal('bonsAntecedentes', this)" tabindex="6" title="Informe um valor inteiro"
+              data-bs-toggle="tooltip" data-bs-placement="right" />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" style="text-align: right;">
+            <b>Somatório de Graus: </b>
+          </td>
+          <td>
+            <span id="totalGeral">3</span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" style="text-align: right;">
+            Reincidência?
+          </td>
+          <td>
+            <input type="checkbox" id="reincidencia" class="form-check-input"
+              onchange="Calc.atualizarCalculos()"></input>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="areaResultado" class="container">
+    <h3>Selecione os enquadramentos para início dos cálculos</h3>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 860px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sobre a Calculadora</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="text-align:justify;">
+            A presente calculadora visa orientar e facilitar os cálculos referentes a dosimetria das penalidades
+            administrativas aplicadas a servidores públicos federais
+            à luz da 
+            <a href="https://www.planalto.gov.br/ccivil_03/LEIS/L8112compilado.htm" target="blank">
+              Lei n° 8.112, de 11 de dezembro de 1990
+            </a>, 
+            e tem como referencial o estudo sobre dosimetria da
+            penalidade administrativa realizado pela Corregedoria-Geral da União
+            apresentado no 
+            <a href="https://corregedorias.gov.br/encontro-de-corregedorias-siscor-e-procor" target="blank">
+              Encontro de Cooregedorias SISCOR e PROCOR realizado em 08/12/2020
+            </a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+</body>
+
 </html>
