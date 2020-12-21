@@ -244,7 +244,7 @@ const Calc = {
         $('#totalGeral').html(graus);
 
         if (config.suspensao1) {
-            return Calc.calcularCasoSuspensao1(graus);
+            return Calc.calcularCasoSuspensao1(config, graus);
         } else {
             return Calc.calcularCasoGeral(config, graus);
         }
@@ -268,7 +268,7 @@ const Calc = {
         return retorno;
     },
 
-    calcularCasoSuspensao1: function (graus) {
+    calcularCasoSuspensao1: function (config, graus) {
         let dias = 6 * graus / 7;
         dias = (dias > 1) ? dias : 1;
         dias = Math.floor(dias);
@@ -308,12 +308,11 @@ const Calc = {
             } else {
                 retorno = `<h3 title="Grau: ${graus}" data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de ${diasSuspensao2} dia(s) ou Destituição de Cargo em Comissão</h3>`;
             }
+
+            return retorno;
         }
 
         if (graus <= 15) {
-            if (config.suspensao2) {
-                retorno = `<h3 title="Grau: ${graus}" data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de ${graus - 15} dia(s) ou Destituição de Cargo em Comissão</h3>`;
-            }
             if (config.reincidencia) {
                 retorno = `<h3 title="Grau: ${graus}. Penalidade convertida de Advertência para Suspensão devido a reincidência." data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de 1 dia ou Destituição de Cargo em Comissão</h3>`;
             } else {
@@ -337,13 +336,11 @@ const Calc = {
                 retorno = `<h3 title="Grau: ${graus}" data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de ${diasSuspensao2} dia(s)</h3>`;
                 retorno += Calc.calcularMensagemTAC(diasSuspensao2);
             }
+
+            return retorno;
         }
 
         if (graus <= 15) {
-            if (config.suspensao2) {
-                retorno = `<h3 title="Grau: ${graus}" data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de ${graus - 15} dia(s)</h3>`;
-                retorno += Calc.calcularMensagemTAC(graus - 15);
-            }
             if (config.reincidencia) {
                 retorno = `<h3 title="Grau: ${graus}. Penalidade convertida de Advertência para Suspensão devido a reincidência." data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de 1 dia</h3>`;
                 retorno += Calc.calcularMensagemTAC(1);
