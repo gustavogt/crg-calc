@@ -53,6 +53,7 @@ const Calc = {
         { descricao: "Lei 8.112, Art. 132, X - lesão aos cofres públicos e dilapidação do patrimônio nacional;", pena: "Demissão" },
         { descricao: "Lei 8.112, Art. 132, XI - corrupção;", pena: "Demissão" },
         { descricao: "Lei 8.112, Art. 132, XII - acumulação ilegal de cargos, empregos ou funções públicas;", pena: "Demissão" },
+        { descricao: "Lei 8.112, Art. 132, XIII - transgressão dos incisos IX a XVI do art. 117", pena: "Demissão" },
         { descricao: "Lei 12.527, Art. 32, I - recusar-se a fornecer informação requerida nos termos desta Lei, retardar deliberadamente o seu fornecimento ou fornecê-la intencionalmente de forma incorreta, incompleta ou imprecisa;", pena: "Suspensão1" },
         { descricao: "Lei 12.527, Art. 32, II - utilizar indevidamente, bem como subtrair, destruir, inutilizar, desfigurar, alterar ou ocultar, total ou parcialmente, informação que se encontre sob sua guarda ou a que tenha acesso ou conhecimento em razão do exercício das atribuições de cargo, emprego ou função pública;", pena: "Suspensão1" },
         { descricao: "Lei 12.527, Art. 32, III - agir com dolo ou má-fé na análise das solicitações de acesso à informação;", pena: "Suspensão1" },
