@@ -1,6 +1,6 @@
 /* exported Calc */
 const Calc = {
-    tipos: ["tac", "pad"],
+    tipos: ["tac", "pad"], 
 
     qualificadores: {
         natureza: ['Culpa Leve', 'Culpa Grave', 'Dolo'],
