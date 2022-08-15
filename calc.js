@@ -224,7 +224,7 @@ const Calc = {
                 resultado = "<h3>Demissão, Destituição, Cassação de Aposentadoria ou Disponibilidade</h3>";
             } else if (config.tipo == "tac") {
                 resultado = "<h3>Demissão, Destituição, Cassação de Aposentadoria ou Disponibilidade</h3>";
-                resultado += Calc.calcularMensagemTAC(1000);
+                resultado += Calc.calcularMensagemTAC(true, 1000);
             }
         }
 
@@ -255,10 +255,10 @@ const Calc = {
         return diasSuspensao > 30;
     },
 
-    calcularMensagemTAC: function (diasSuspensao) {
+    calcularMensagemTAC: function (reincidencia, diasSuspensao) {
         let retorno = "";
 
-        if (Calc.tacPodeSerCelebrado(diasSuspensao)) {
+        if (reincidencia || Calc.tacPodeSerCelebrado(diasSuspensao)) {
             retorno = `<h3>Celebração de TAC impossível</h3>`;
         } else {
             retorno = `<h3>Celebração de TAC possível</h3>`;
@@ -280,7 +280,7 @@ const Calc = {
             retorno = `<h3 title="Grau: ${graus}" data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de ${dias} dia(s) ou Destituição de Cargo em Comissão</h3>`;
         } else if (config.tipo == "tac") {
             retorno = `<h3 title="Grau: ${graus}" data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de ${dias} dia(s)</h3>`;
-            retorno += Calc.calcularMensagemTAC(dias);
+            retorno += Calc.calcularMensagemTAC(config.reincidencia, dias);
         }
 
         return retorno;
@@ -332,10 +332,10 @@ const Calc = {
         if (config.suspensao2) {
             if (config.advertencia || config.reincidencia) {
                 retorno = `<h3 title="Grau: ${graus}" data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de ${diasSuspensao2 > diasCasoGeral ? diasSuspensao2 : diasCasoGeral} dia(s)</h3>`;
-                retorno += Calc.calcularMensagemTAC(diasSuspensao2 > diasCasoGeral ? diasSuspensao2 : diasCasoGeral);
+                retorno += Calc.calcularMensagemTAC(config.reincidencia, diasSuspensao2 > diasCasoGeral ? diasSuspensao2 : diasCasoGeral);
             } else {
                 retorno = `<h3 title="Grau: ${graus}" data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de ${diasSuspensao2} dia(s)</h3>`;
-                retorno += Calc.calcularMensagemTAC(diasSuspensao2);
+                retorno += Calc.calcularMensagemTAC(config.reincidencia, diasSuspensao2);
             }
 
             return retorno;
@@ -344,14 +344,14 @@ const Calc = {
         if (graus <= 15) {
             if (config.reincidencia) {
                 retorno = `<h3 title="Grau: ${graus}. Penalidade convertida de Advertência para Suspensão devido a reincidência." data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de 1 dia</h3>`;
-                retorno += Calc.calcularMensagemTAC(1);
+                retorno += Calc.calcularMensagemTAC(config.reincidencia, 1);
             } else {
                 retorno = `<h3 title="Grau: ${graus}" data-bs-toggle="tooltip" data-bs-placement="right">Advertência</h3>`;
-                retorno += Calc.calcularMensagemTAC(0);
+                retorno += Calc.calcularMensagemTAC(config.reincidencia, 0);
             }
         } else {
             retorno = `<h3 title="Grau: ${graus}" data-bs-toggle="tooltip" data-bs-placement="right">Suspensão de ${graus - 15} dia(s)</h3>`;
-            retorno += Calc.calcularMensagemTAC(graus - 15);
+            retorno += Calc.calcularMensagemTAC(config.reincidencia, graus - 15);
         }
 
         return retorno;
